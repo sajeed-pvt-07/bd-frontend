@@ -14,7 +14,7 @@ export const WELCOME_TOUR_STEPS = [
     popover: {
       title: '👋 Hey there!',
       description: 'Thanks so much for coming and spending time with me today! I\'m so excited to show you all the sweet memories I\'ve put together for you. This is going to be fun!',
-      side: 'bottom' as const,
+      side: 'over' as const,
       align: 'center' as const,
     },
   },

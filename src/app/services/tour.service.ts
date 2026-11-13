@@ -1,7 +1,6 @@
 import { Injectable, NgZone, inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { driver } from 'driver.js';
-import 'driver.js/dist/driver.css';
 import {
   BIRTHDAY_CELEBRATION_TOUR_STEPS,
   WELCOME_TOUR_STEPS,
@@ -55,10 +54,7 @@ export class TourService {
   private showPageSpecificTour(url: string): void {
     // Delay to ensure page is rendered
     setTimeout(() => {
-      if (url.includes('/home') || url === '/') {
-        this.startWelcomeTour();
-        this.toursCompleted.add(url);
-      } else if (url.includes('/birthday-celebration')) {
+      if (url.includes('/birthday-celebration')) {
         this.startBirthdayCelebrationTour();
         this.toursCompleted.add(url);
       } else if (url.includes('/user-selection')) {
