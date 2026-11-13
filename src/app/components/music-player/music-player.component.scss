@@ -1,0 +1,203 @@
+.music-player-toggle {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 8px 22px var(--shadow);
+  cursor: pointer;
+  line-height: 0;
+  padding: 0;
+  pointer-events: auto;
+  touch-action: manipulation;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.music-player-toggle:hover {
+  background: var(--hover-bg);
+  transform: translateY(-1px);
+}
+
+.music-player {
+  position: fixed;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) auto minmax(240px, 1.5fr) minmax(120px, 0.7fr);
+  gap: 14px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: var(--text);
+  box-shadow: 0 12px 34px var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+.track-info {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.track-info strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eyebrow {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  line-height: 0;
+  padding: 0;
+  transition: background 160ms ease, transform 160ms ease, border-color 160ms ease;
+}
+
+button:hover {
+  background: var(--hover-bg);
+  transform: translateY(-1px);
+}
+
+.close-button {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.close-button:hover {
+  color: var(--text);
+  background: var(--hover-bg);
+  transform: none;
+}
+
+.play-button {
+  width: 42px;
+  height: 42px;
+  background: var(--primary);
+  color: var(--primary-text);
+  border-color: transparent;
+}
+
+lucide-icon,
+::ng-deep svg {
+  width: 18px;
+  height: 18px;
+}
+
+.timeline,
+.volume {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.volume {
+  grid-template-columns: auto 1fr;
+}
+
+input[type='range'] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.playlist {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-top: 2px;
+}
+
+.playlist button {
+  display: block;
+  width: auto;
+  max-width: 180px;
+  height: 30px;
+  border-radius: 999px;
+  padding: 0 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 30px;
+  color: var(--text-muted);
+}
+
+.playlist button.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.compact-state {
+  display: flex;
+  right: auto;
+  gap: 8px;
+  width: fit-content;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 760px) {
+  .music-player {
+    grid-template-columns: 1fr auto;
+    gap: 10px 12px;
+    padding: 12px;
+  }
+
+  .controls {
+    justify-content: flex-end;
+  }
+
+  .timeline,
+  .volume,
+  .playlist {
+    grid-column: 1 / -1;
+  }
+}
+
+.progress-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}

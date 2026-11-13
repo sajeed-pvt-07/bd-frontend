@@ -1,0 +1,242 @@
+@use '../../../variables' as *;
+
+:host {
+  display: block;
+  min-height: 100vh;
+  color: var(--text);
+}
+
+.open-when-page {
+  display: flex;
+  min-height: 100vh;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  padding: 88px 18px 48px;
+  background:
+    radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--primary) 36%, transparent), transparent 28%),
+    radial-gradient(circle at 84% 10%, color-mix(in srgb, var(--primary-hover) 18%, transparent), transparent 28%),
+    linear-gradient(180deg, color-mix(in srgb, var(--primary) 24%, transparent), transparent 320px);
+}
+
+.notes-header {
+  max-width: 640px;
+  margin: 0 auto 30px;
+  text-align: center;
+
+  h1 {
+    margin: 12px 0;
+    color: var(--text);
+    font-family: $cursive-font;
+    font-size: clamp(42px, 8vw, 68px);
+    line-height: 1.05;
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.65;
+  }
+}
+
+.notes-eyebrow {
+  color: var(--primary-hover);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.notes-list {
+  display: grid;
+  width: min(640px, 100%);
+  gap: 12px;
+}
+
+.note-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 76%, var(--bg));
+  box-shadow: 0 10px 24px var(--shadow);
+  transition: border-color 180ms ease, background-color 180ms ease;
+
+  &.is-open {
+    border-color: color-mix(in srgb, var(--accent) 56%, var(--border));
+    background: color-mix(in srgb, var(--surface) 90%, var(--bg));
+  }
+}
+
+.note-toggle {
+  display: grid;
+  width: 100%;
+  min-height: 68px;
+  grid-template-columns: 38px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: -3px;
+  }
+}
+
+.note-symbol {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primary) 24%, transparent);
+  color: var(--accent);
+  font-size: 19px;
+}
+
+.note-label {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.note-action {
+  color: var(--primary-hover);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.note-message {
+  padding: 4px 24px 22px 68px;
+  animation: note-open 220ms ease both;
+
+  h2 {
+    margin: 0 0 8px;
+    color: var(--accent);
+    font-family: $cursive-font;
+    font-size: 26px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.75;
+    white-space: pre-line;
+  }
+}
+
+.notes-error,
+.notes-empty {
+  max-width: 640px;
+  padding: 18px 22px;
+  border: 1px solid color-mix(in srgb, var(--accent) 36%, var(--border));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 76%, var(--bg));
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.notes-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.notes-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border: 1px solid color-mix(in srgb, var(--primary) 55%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 28%, var(--surface));
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 160ms ease, background-color 160ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: color-mix(in srgb, var(--primary) 42%, var(--surface));
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+.secondary-link {
+  background: color-mix(in srgb, var(--surface) 86%, var(--bg));
+}
+
+@keyframes note-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 520px) {
+  .open-when-page {
+    padding: 80px 14px 36px;
+  }
+
+  .notes-header {
+    margin-bottom: 22px;
+
+    p {
+      font-size: 14px;
+    }
+  }
+
+  .note-toggle {
+    min-height: 64px;
+    grid-template-columns: 32px 1fr;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .note-symbol {
+    width: 32px;
+    height: 32px;
+  }
+
+  .note-label {
+    font-size: 14px;
+  }
+
+  .note-action {
+    grid-column: 2;
+    margin-top: -6px;
+  }
+
+  .note-message {
+    padding: 0 16px 18px 54px;
+  }
+
+  .notes-navigation {
+    margin-top: 24px;
+  }
+}

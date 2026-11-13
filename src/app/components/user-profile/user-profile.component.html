@@ -1,0 +1,7 @@
+<div class="user-profile-container" (click)="selectUser()" [class.selected]="selected">
+  <div class="checkmark" *ngIf="selected">✓</div>
+  <div class="dp">
+    <img [src]="user.dp" alt="User DP" class="dp-image">
+  </div>
+  <span class="name">{{ user.name }}</span>
+</div>

@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&display=swap');
+
+:root {
+  --bg: #F9F7F7;
+  --surface: #DBE2EF;
+  --hover-bg: #CFE3E6;
+
+  --text: #112D4E;
+  --text-muted: #5C6B7A;
+
+  --primary: #A6E3E9;
+  --primary-hover: #3282B8;
+  --primary-text: #112D4E;
+
+  --accent: #0F4C75;
+  --border: #d0d7de;
+
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme {
+  --bg: #1B262C;
+  --surface: #0F4C75;
+  --hover-bg: #1E5F8B;
+
+  --text: #BBE1FA;
+  --text-muted: #8daec7;
+
+  --primary: #A6E3E9;
+  --primary-hover: #8fd7df;
+  --primary-text: #112D4E;
+
+  --accent: #DBE2EF;
+  --border: #2c4454;
+
+  --shadow: rgba(0, 0, 0, 0.4);
+}
+
+$font-heading: "Poppins", sans-serif;
+$font-body: "Inter", sans-serif;
+$cursive-font: "Edu NSW ACT Cursive", cursive;

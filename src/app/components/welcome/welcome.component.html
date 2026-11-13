@@ -1,0 +1,12 @@
+<div class="welcome-container">
+  @if (loading$ | async) {
+    <app-loading-indicator label="Loading celebration..."></app-loading-indicator>
+  } @else {
+    <div class="content">
+       <h1 class="hey">{{ (config$ | async)?.get('hey-text') }}</h1>
+       <h1 class="wish">{{ (config$ | async)?.get('wish-text') }}</h1>
+    </div>
+
+    <button class="celebrate-button" (click)="celebrate()" title="Start the birthday surprise" aria-label="Start the birthday surprise">Start the surprise 🎈</button>
+  }
+</div>

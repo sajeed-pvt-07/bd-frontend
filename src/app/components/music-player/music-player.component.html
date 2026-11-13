@@ -1,0 +1,88 @@
+<!-- Collapsed Icon -->
+<button
+  type="button"
+  *ngIf="!isLoading && songs.length && !isExpanded"
+  class="music-player-toggle"
+  (click)="toggleExpanded()"
+  title="Open music player"
+  aria-label="Open music player"
+>
+  <lucide-icon name="music"></lucide-icon>
+</button>
+
+<!-- Expanded Player -->
+<section class="music-player" *ngIf="!isLoading && songs.length && isExpanded">
+  <button
+    type="button"
+    class="close-button"
+    (click)="toggleExpanded()"
+    title="Close music player"
+    aria-label="Close music player"
+  >
+    <lucide-icon name="x"></lucide-icon>
+  </button>
+
+  <div class="track-info">
+    <span class="eyebrow">Now playing</span>
+    <strong>{{ currentSong.name }}</strong>
+  </div>
+
+  <div class="controls">
+    <button type="button" (click)="playPrevious()" title="Previous song" aria-label="Previous song">
+      <lucide-icon name="skip-back"></lucide-icon>
+    </button>
+
+    <button
+      type="button"
+      class="play-button"
+      (click)="togglePlayback()"
+      [title]="isPlaying ? 'Pause' : 'Play'"
+      [attr.aria-label]="isPlaying ? 'Pause' : 'Play'"
+    >
+      <lucide-icon [name]="isPlaying ? 'pause' : 'play'"></lucide-icon>
+    </button>
+
+    <button type="button" (click)="playNext()" title="Next song" aria-label="Next song">
+      <lucide-icon name="skip-forward"></lucide-icon>
+    </button>
+  </div>
+  <div class="progress-bars">
+    <div class="timeline">
+      <span>{{ formatTime(currentTime) }}</span>
+      <input
+        type="range"
+        min="0"
+        [max]="duration || 0"
+        [value]="currentTime"
+        (input)="seek($event)"
+        aria-label="Song progress"
+      />
+      <span>{{ formatTime(duration) }}</span>
+    </div>
+  
+    <div class="volume">
+      <lucide-icon name="volume-2"></lucide-icon>
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.05"
+        [value]="volume"
+        (input)="setVolume($event)"
+        aria-label="Volume"
+      />
+    </div>
+  </div>
+
+  <!-- <div class="playlist" *ngIf="songs.length > 1">
+    <button
+      type="button"
+      *ngFor="let song of songs; let index = index"
+      [ngClass]="{ active: index === currentIndex }"
+      (click)="playSong(index)"
+      [title]="song.name"
+    >
+      {{ song.name }}
+    </button>
+  </div> -->
+</section>

@@ -1,0 +1,28 @@
+.loading-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 180px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 70%, var(--bg));
+  color: var(--text-muted);
+  box-shadow: 0 12px 28px var(--shadow);
+  font-weight: 700;
+}
+
+lucide-icon,
+::ng-deep svg {
+  width: 20px;
+  height: 20px;
+  color: var(--primary-hover);
+  animation: loading-spin 900ms linear infinite;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

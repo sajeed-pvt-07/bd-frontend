@@ -1,0 +1,53 @@
+
+
+<div class="main-content">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div *ngIf="!isAdminPage" class="weather-scene" aria-hidden="true">
+      <div class="moon"></div>
+      <span class="star star-one"></span>
+      <span class="star star-two"></span>
+      <span class="star star-three"></span>
+      <span class="star star-four"></span>
+      <span class="star star-five"></span>
+      <span class="star star-six"></span>
+      <span class="star star-seven"></span>
+      <span class="star star-eight"></span>
+      <div class="sun"></div>
+      <div class="cloud cloud-one"></div>
+      <div class="cloud cloud-two"></div>
+      <div class="cloud cloud-three"></div>
+    </div>
+
+    <button
+      *ngIf="!isAdminPage"
+      class="theme-toggle"
+      type="button"
+      (click)="toggleTheme()"
+      [attr.aria-label]="
+        (isDark$ | async) ? 'Switch to light theme' : 'Switch to dark theme'
+      "
+      [title]="(isDark$ | async) ? 'Light theme' : 'Dark theme'"
+    >
+      <lucide-icon [name]="(isDark$ | async) ? 'sun' : 'moon'"></lucide-icon>
+    </button>
+
+    <button
+      *ngIf="!isAdminPage && !isThankYouPage"
+      class="tour-button"
+      type="button"
+      (click)="startTour()"
+      title="Start guided tour"
+      aria-label="Start guided tour"
+    >
+      <lucide-icon name="info"></lucide-icon>
+    </button>
+
+    <button type="button" class="back-button" *ngIf="!isAdminPage && !isHomePage" (click)="navigateBack()" title="Go back" aria-label="Go back to previous page">
+        <lucide-icon name="arrow-left"></lucide-icon>
+    </button>
+
+    <div id="main-content" tabindex="-1">
+      <router-outlet></router-outlet>
+    </div>
+    <app-music-player *ngIf="!isAdminPage"></app-music-player>
+</div>

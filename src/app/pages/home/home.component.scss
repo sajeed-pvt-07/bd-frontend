@@ -1,0 +1,18 @@
+@use '../../../variables' as *;
+
+:host {
+    display: block;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--primary) 44%, transparent), transparent 28%),
+        radial-gradient(circle at 84% 10%, color-mix(in srgb, var(--primary-hover) 22%, transparent), transparent 28%),
+        linear-gradient(180deg, color-mix(in srgb, var(--primary) 36%, transparent), transparent 320px),
+        transparent;
+}
+
+.home-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}

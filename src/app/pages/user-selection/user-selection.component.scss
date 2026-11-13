@@ -1,0 +1,63 @@
+@use '../../../variables' as *;
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.user-selection-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 100vh;
+  height: 100vh;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--primary) 44%, transparent), transparent 28%),
+    radial-gradient(circle at 84% 10%, color-mix(in srgb, var(--primary-hover) 22%, transparent), transparent 28%),
+    linear-gradient(180deg, color-mix(in srgb, var(--primary) 36%, transparent), transparent 320px),
+    transparent;
+}
+
+.users{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 16px;
+    justify-items: center;
+    width: min(75%, 640px);
+}
+
+.selected-action {
+  margin: 22px 0px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--primary-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.selected-action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px var(--shadow);
+  background: var(--primary-hover);
+  color: var(--primary-text);
+}
+
+.selected-action .name {
+  font-family: $cursive-font;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+@media (max-width: 600px) {
+  .users {
+    grid-template-columns: 1fr;
+  }
+  .user-selection-container{
+    height: 125vh;
+  }
+}

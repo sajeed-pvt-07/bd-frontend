@@ -1,0 +1,74 @@
+
+@use 'variables' as *;
+
+html, body {
+  background-color: var(--bg);
+  color: var(--text);
+  margin: 0px;
+  padding: 0px;
+  font-family: $font-body;
+  height: 100%;
+  width: 100%;
+
+}
+
+html {
+  view-transition-name: root;
+}
+
+::view-transition-old(root) {
+  animation: 120ms ease-out both fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 200ms ease-out both fade-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+
+h1, h2, h3 {
+  font-family: $font-heading;
+}
+
+.driver-popover-skip-button {
+  width: auto !important;
+  min-width: 76px;
+  height: auto !important;
+  padding: 4px 8px !important;
+  color: #727272 !important;
+  font-size: 12px !important;
+  text-align: center !important;
+}
+
+.driver-popover-skip-button:hover,
+.driver-popover-skip-button:focus-visible {
+  color: #2d2d2d !important;
+}

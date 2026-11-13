@@ -1,0 +1,65 @@
+<main class="thank-you-page">
+  @if (loading$ | async) {
+    <app-loading-indicator label="Loading your thank-you message..."></app-loading-indicator>
+  } @else {
+    @if (viewModel$ | async; as viewModel) {
+      @if (viewModel.phrases.length === 100) {
+        <div class="thank-you-stage">
+          <section
+            class="thank-you-wheel"
+            role="img"
+            [attr.aria-label]="viewModel.heading"
+          >
+            <div class="outer-orbit" aria-hidden="true"></div>
+            <div
+              class="progress-orbit"
+              [style.--progress]="viewModel.progress"
+              aria-hidden="true"
+            ></div>
+            <div class="phrase-spokes" aria-hidden="true">
+              @for (phrase of viewModel.phrases; track $index) {
+                <span
+                  class="ring-phrase"
+                  [class.visible]="$index < viewModel.shownCount"
+                  [class.active]="viewModel.activeIndex === $index"
+                  [class.reverse]="phraseFlips($index)"
+                  [style.--angle]="phraseAngle($index)"
+                  [style.--text-angle]="phraseTextAngle($index)"
+                  [style.--phrase-start]="'22cqw'"
+                  (mouseenter)="showPhraseDetails(phrase)"
+                  (mouseleave)="hidePhraseDetails(phrase)"
+                  (click)="togglePhraseDetails(phrase)"
+                >
+                  <span class="phrase-label">{{ phrase }}</span>
+                </span>
+              }
+            </div>
+            <div class="inner-orbit" aria-hidden="true"></div>
+            <div class="wheel-center">
+              <h1 class="wheel-heading">{{ viewModel.heading }}</h1>
+              <p class="active-phrase">{{ viewModel.phrases[viewModel.activeIndex] }}</p>
+              <span class="center-rule" aria-hidden="true"></span>
+              <span class="phrase-count">
+                N° {{ viewModel.activeIndex + 1 | number: '2.0-0' }}
+              </span>
+            </div>
+          </section>
+          @if (hoveredPhrase) {
+            <div class="hovered-phrase" role="status">{{ hoveredPhrase }}</div>
+          }
+        </div>
+        <nav class="thank-you-actions" aria-label="What would you like to do next?">
+          <span>Keep the story close</span>
+          <div class="thank-you-action-links">
+            <a routerLink="/open-when">Open a little note</a>
+            <a routerLink="/home" (click)="replayJourney()">Replay the journey</a>
+          </div>
+        </nav>
+      } @else {
+        <section class="config-error" role="alert">
+          The thank-you message needs 100 phrases. Please restart the backend to fill any missing defaults.
+        </section>
+      }
+    }
+  }
+</main>

@@ -1,0 +1,123 @@
+<main class="timeline-page">
+  <header class="timeline-header memory-header">
+    <div>
+      <h1>{{ (selectedUser$ | async)?.name || 'Memories' }}</h1>
+      <p>Little moments, saved in order.</p>
+    </div>
+  </header>
+
+  @if (hasError$ | async) {
+    <section class="state-panel">Could not load the timeline right now.</section>
+  } @else {
+    @if (viewModel$ | async; as vm) {
+      @if (vm.specialItems.length) {
+        <section class="special-section">
+          <article class="special-card" *ngFor="let item of vm.specialItems">
+            <span class="special-label">Special</span>
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.description }}</p>
+
+            <blockquote *ngIf="item.takeaway">
+              {{ item.takeaway }}
+            </blockquote>
+          </article>
+        </section>
+      }
+
+      @if (vm.undatedItems.length) {
+        <section class="undated-section">
+          <ng-container *ngFor="let item of vm.undatedItems">
+            <ng-container
+              *ngTemplateOutlet="timelineCardTemplate; context: { item: item }"
+            ></ng-container>
+          </ng-container>
+        </section>
+      }
+
+      @if (vm.timelineEvents.length) {
+        <section class="timeline-shell">
+          <ngx-timeline
+            class="memory-timeline"
+            [events]="vm.timelineEvents"
+            [groupEvent]="timelineGroup"
+            [changeSide]="timelineChangeSide"
+            [reverseOrder]="false"
+            [enableAnimation]="false"
+            [eventCustomTemplate]="eventTemplate"
+            [dateInstantCustomTemplate]="dateTemplate"
+            [centerIconCustomTemplate]="centerIconTemplate"
+          ></ngx-timeline>
+        </section>
+      } @else if (!vm.specialItems.length && !vm.undatedItems.length) {
+        <section class="state-panel">No timeline items yet.</section>
+      }
+    } @else {
+      <section class="loading-shell">
+        <app-loading-indicator label="Loading moments..."></app-loading-indicator>
+      </section>
+    }
+  }
+
+  <footer class="timeline-ending">
+    <p>One last little note before you go.</p>
+    <button type="button" class="ending-button" (click)="continueToThankYou()">
+      <span>One last thing</span>
+      <span aria-hidden="true">→</span>
+    </button>
+  </footer>
+</main>
+
+<ng-template #eventTemplate let-event="event">
+  @if (getItem(event); as item) {
+    <ng-container
+      *ngTemplateOutlet="timelineCardTemplate; context: { item: item }"
+    ></ng-container>
+  }
+</ng-template>
+
+<ng-template #timelineCardTemplate let-item="item">
+  <article class="timeline-card" [class.has-chat]="(item.chats?.length ?? 0) > 0">
+    <div class="card-heading">
+      <span class="date-chip" *ngIf="item.eventDate">{{ item.eventDate | date: 'd MMM y' }}</span>
+      <h2>{{ item.title }}</h2>
+    </div>
+
+    <p class="description">{{ item.description }}</p>
+
+    <div class="media-list" *ngIf="item.media?.length">
+      <a
+        class="media-link"
+        *ngFor="let media of item.media"
+        [href]="media.url"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <span>{{ media.type }}</span>
+        <strong>{{ media.caption || media.url }}</strong>
+      </a>
+    </div>
+
+    <div class="chat-list" *ngIf="item.chats?.length">
+      <div
+        class="chat-line"
+        *ngFor="let chat of item.chats"
+        [ngClass]="chat.speaker === 'ME' ? 'me' : 'you'"
+      >
+        <span>{{ chat.speaker === 'ME' ? 'Me' : 'You' }}</span>
+        <p>{{ chat.message }}</p>
+      </div>
+    </div>
+
+    <blockquote class="takeaway" *ngIf="item.takeaway">
+      {{ item.takeaway }}
+    </blockquote>
+  </article>
+</ng-template>
+
+<ng-template #dateTemplate let-item="item">
+  <time class="side-date">{{ item.timestamp | date: 'd MMM' }}</time>
+</ng-template>
+
+<ng-template #centerIconTemplate>
+  <span class="timeline-dot"></span>
+</ng-template>

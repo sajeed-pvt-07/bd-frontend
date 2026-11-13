@@ -1,0 +1,54 @@
+<main class="greeting-page">
+  @if (usersLoading$ | async) {
+    <app-loading-indicator
+      label="Preparing your note..."
+    ></app-loading-indicator>
+  } @else {
+    @if (selectedUser$ | async; as user) {
+      <section class="greeting-stage">
+        <article class="greeting-card" #greetingCard tabindex="-1">
+          <div class="card-glow"></div>
+          <div class="spark spark-one"></div>
+          <div class="spark spark-two"></div>
+          <div class="spark spark-three"></div>
+          <div class="profile-orbit">
+            <img [src]="user.dp" [alt]="user.name" />
+          </div>
+
+          <div class="card-copy">
+            <span class="eyebrow">A note before the memories</span>
+            <h1>Hey {{ user.name }}</h1>
+            @if (greeting$ | async; as greeting) {
+              @if (typedGreeting$ | async; as typedGreeting) {
+                <p>
+                  <span aria-hidden="true">
+                    {{ typedGreeting.text }}
+                    @if (typedGreeting.isTyping) {
+                      <span class="typing-cursor"></span>
+                    }
+                  </span>
+                  <span class="visually-hidden">{{ greeting.message }}</span>
+                </p>
+                @if (!typedGreeting.isTyping) {
+                  <strong>Always cheering for you</strong>
+                  <button
+                    type="button"
+                    class="continue-button"
+                    (click)="continueToTimeline(user)"
+                    title="Continue to the memories"
+                    aria-label="Explore the memories"
+                  >
+                    <span>Explore the Memories</span>
+                    <lucide-icon name="sparkles"></lucide-icon>
+                  </button>
+                }
+              }
+            }
+          </div>
+        </article>
+      </section>
+    } @else {
+      <section class="state-panel">Could not load guest details.</section>
+    }
+  }
+</main>

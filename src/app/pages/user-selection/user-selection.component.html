@@ -1,0 +1,22 @@
+<div class="user-selection-container">
+  <h2 class="selection-title">Who's joining the celebration today?</h2>
+  @if (loading$ | async) {
+    <app-loading-indicator label="Loading profiles..."></app-loading-indicator>
+  } @else {
+    <div class="users">
+      @for (user of users$ | async; track user.id) {
+        <app-user-profile
+          [user]="user"
+          [selected]="user === selectedUser"
+          (userSelected)="onUserSelected($event)"
+        >
+        </app-user-profile>
+      }
+    </div>
+  }
+
+  <button class="selected-action proceed-button" *ngIf="selectedUser" (click)="goToTimeline()" title="Proceed to timeline" aria-label="Go to timeline for celebration">
+    <span class="name">{{ selectedUser.name }}</span> is ready to celebrate? Let's go!
+  </button>
+
+</div>

@@ -1,0 +1,355 @@
+@use '../../../variables' as *;
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--primary) 44%, transparent), transparent 28%),
+    radial-gradient(circle at 84% 10%, color-mix(in srgb, var(--primary-hover) 22%, transparent), transparent 28%),
+    linear-gradient(180deg, color-mix(in srgb, var(--primary) 36%, transparent), transparent 320px),
+    transparent;
+  color: var(--text);
+}
+
+.timeline-page {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  text-align: center;
+
+  h1 {
+    margin: 0;
+    font-family: $cursive-font;
+    font-size: clamp(42px, 6vw, 68px);
+    line-height: 1;
+    text-transform: capitalize;
+  }
+
+  p {
+    margin: 32px auto 0;
+    color: color-mix(in srgb, var(--text) 66%, transparent);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+}
+
+.state-panel,
+.special-card,
+.timeline-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  box-shadow: 0 14px 32px var(--shadow);
+}
+
+.state-panel {
+  padding: 28px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.loading-shell {
+  display: grid;
+  place-items: center;
+  padding: 34px 0;
+}
+
+.special-section,
+.undated-section {
+  margin: 0 0 28px;
+}
+
+.special-section {
+  display: flex;
+  justify-content: center;
+}
+
+.undated-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: 14px;
+}
+
+.special-card {
+  width: min(820px, 100%);
+  padding: clamp(22px, 4vw, 34px);
+  border-color: color-mix(in srgb, var(--primary) 36%, var(--border));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--primary) 10%, transparent), transparent),
+    color-mix(in srgb, var(--surface) 46%, var(--bg));
+  box-shadow: 0 12px 28px var(--shadow);
+
+  h2 {
+    margin: 16px 0 12px;
+    font-size: clamp(26px, 4vw, 42px);
+    line-height: 1.12;
+  }
+
+  p {
+    max-width: 820px;
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  blockquote {
+    max-width: 820px;
+    margin: 20px 0 0;
+    padding: 16px 18px;
+    border-left: 3px solid var(--primary);
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    border-radius: 6px;
+    color: color-mix(in srgb, var(--text) 82%, transparent);
+    font-family: $font-body;
+    font-style: italic;
+    line-height: 1.65;
+  }
+}
+
+.special-label {
+  display: inline-flex;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.timeline-shell {
+  --ngx-timeline-period-inner-container: var(--accent);
+  --ngx-timeline-icon: var(--primary-hover);
+  --ngx-timeline-line-background: color-mix(in srgb, var(--accent) 28%, transparent);
+  --ngx-timeline-event-background: transparent;
+  --ngx-timeline-event-text-color: var(--text);
+  --ngx-timeline-flex-display-col: 47 47 0;
+  --ngx-timeline-flex-display-col-center: 6 6 0;
+}
+
+.timeline-shell ::ng-deep .period-container .period-inner-container {
+  background: var(--accent);
+  color: var(--bg) !important;
+  font-weight: 800;
+  border: 1px solid color-mix(in srgb, var(--bg) 18%, transparent);
+}
+
+.timeline-shell ::ng-deep .period-container .period-inner-container span {
+  color: var(--bg) !important;
+}
+
+.timeline-card {
+  width: min(100%, 440px);
+  padding: 18px;
+}
+
+.card-heading {
+  display: grid;
+  gap: 8px;
+
+  h2 {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.22;
+  }
+}
+
+.date-chip {
+  justify-self: start;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 52%, transparent);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.description {
+  margin: 12px 0 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.media-list,
+.chat-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.media-link {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--primary-hover) 18%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 52%, transparent);
+  color: var(--text);
+  text-decoration: none;
+
+  span {
+    color: var(--primary-hover);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: capitalize;
+  }
+
+  strong {
+    overflow-wrap: anywhere;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+}
+
+.chat-line {
+  display: grid;
+  gap: 5px;
+  width: min(86%, 330px);
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 52%, transparent);
+
+  span {
+    color: color-mix(in srgb, var(--text) 62%, transparent);
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  &.me {
+    justify-self: end;
+    background: color-mix(in srgb, var(--primary) 55%, transparent);
+  }
+}
+
+.takeaway {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-left: 4px solid var(--primary-hover);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--surface) 48%, transparent);
+  color: color-mix(in srgb, var(--text) 82%, transparent);
+  font-family: $font-body;
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+.side-date {
+  display: inline-flex;
+  justify-content: center;
+  min-width: 58px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.timeline-ending {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  margin: 44px auto 0;
+  text-align: center;
+
+  p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+}
+
+.ending-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid color-mix(in srgb, var(--primary) 55%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: color-mix(in srgb, var(--primary) 24%, var(--surface));
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+.timeline-dot {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+  background: var(--primary-hover);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 72%, transparent);
+}
+
+@media (max-width: 900px) {
+  .timeline-page {
+    width: min(100% - 20px, 680px);
+    padding-top: 24px;
+  }
+
+  .timeline-header {
+    margin-bottom: 18px;
+  }
+
+  .timeline-card {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .card-heading h2 {
+    font-size: 18px;
+  }
+
+  .chat-line {
+    width: 92%;
+  }
+}
+
+@media (max-width: 520px) {
+  .timeline-page {
+    width: min(100% - 14px, 440px);
+  }
+
+  .special-card {
+    padding: 18px;
+  }
+
+  .timeline-card {
+    padding: 13px;
+  }
+
+  .description,
+  .chat-line p,
+  .media-link strong {
+    font-size: 13px;
+  }
+}

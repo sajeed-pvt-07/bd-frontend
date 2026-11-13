@@ -1,0 +1,303 @@
+.theme-toggle, .back-button, .tour-button {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 8px 22px var(--shadow);
+  cursor: pointer;
+  line-height: 0;
+  padding: 0;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.back-button{
+  left: 18px;
+}
+
+.tour-button {
+  right: 68px;
+}
+
+.theme-toggle:hover, .back-button:hover, .tour-button:hover {
+  background: var(--hover-bg);
+  transform: translateY(-1px);
+}
+
+.theme-toggle:focus-visible,
+.back-button:focus-visible,
+.tour-button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  z-index: 30;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 8px 22px var(--shadow);
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translate(-50%, -160%);
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translate(-50%, 0);
+}
+
+.theme-toggle lucide-icon,
+.theme-toggle ::ng-deep svg,
+.tour-button lucide-icon,
+.tour-button ::ng-deep svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+.main-content {
+  position: relative;
+  z-index: 1;
+}
+
+.weather-scene {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.moon {
+  position: absolute;
+  top: 10%;
+  right: 14%;
+  display: none;
+  width: clamp(58px, 7vw, 82px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #f7edc9;
+  box-shadow: 0 0 28px 5px rgb(247 237 201 / 20%), 0 0 80px 18px rgb(166 227 233 / 9%);
+  animation: moon-glow 6s ease-in-out infinite alternate;
+}
+
+.moon::after {
+  position: absolute;
+  top: -12%;
+  left: 34%;
+  width: 92%;
+  height: 92%;
+  border-radius: 50%;
+  background: var(--bg);
+  content: '';
+}
+
+.star {
+  position: absolute;
+  display: none;
+  width: 3px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #e6f4ff;
+  box-shadow: 0 0 8px 2px rgb(187 225 250 / 42%);
+  animation: star-twinkle 3s ease-in-out infinite alternate;
+}
+
+.star-one {
+  top: 13%;
+  left: 18%;
+  animation-delay: -1s;
+}
+
+.star-two {
+  top: 19%;
+  left: 42%;
+  width: 2px;
+  animation-delay: -2.2s;
+}
+
+.star-three {
+  top: 11%;
+  left: 67%;
+  animation-delay: -0.5s;
+}
+
+.star-four {
+  top: 33%;
+  left: 26%;
+  width: 2px;
+  animation-delay: -1.7s;
+}
+
+.star-five {
+  top: 38%;
+  left: 78%;
+  animation-delay: -2.5s;
+}
+
+.star-six {
+  top: 25%;
+  left: 56%;
+  width: 2px;
+  animation-delay: -1.3s;
+}
+
+.star-seven {
+  top: 47%;
+  left: 12%;
+  animation-delay: -2.8s;
+}
+
+.star-eight {
+  top: 9%;
+  left: 34%;
+  width: 2px;
+  animation-delay: -0.8s;
+}
+
+.sun {
+  position: absolute;
+  top: 12%;
+  right: 12%;
+  width: clamp(54px, 8vw, 88px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #ffe08a;
+  box-shadow: 0 0 45px 12px rgb(255 224 138 / 30%);
+  animation: sun-glow 4s ease-in-out infinite alternate;
+}
+
+.cloud {
+  position: absolute;
+  width: 140px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 88%);
+  filter: drop-shadow(0 8px 14px rgb(17 45 78 / 14%));
+  animation: cloud-drift var(--drift-duration, 12s) ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.cloud::before,
+.cloud::after {
+  position: absolute;
+  bottom: 10px;
+  border-radius: 50%;
+  background: inherit;
+  content: '';
+}
+
+.cloud::before {
+  left: 25px;
+  width: 55px;
+  height: 55px;
+}
+
+.cloud::after {
+  right: 24px;
+  width: 42px;
+  height: 42px;
+}
+
+.cloud-one {
+  top: 15%;
+  right: 20%;
+  --drift-distance: -120px;
+  --drift-duration: 9s;
+}
+
+.cloud-two {
+  top: 30%;
+  right: 6%;
+  transform: scale(0.72);
+  --drift-distance: 100px;
+  --drift-duration: 12s;
+  animation-delay: -8s;
+}
+
+.cloud-three {
+  top: 23%;
+  left: 9%;
+  transform: scale(0.58);
+  --drift-distance: -90px;
+  --drift-duration: 10s;
+  animation-delay: -12s;
+}
+
+:host-context(.dark-theme) .moon,
+:host-context(.dark-theme) .star {
+  display: block;
+}
+
+:host-context(.dark-theme) .sun {
+  display: none;
+}
+
+:host-context(.dark-theme) .weather-scene {
+  opacity: 0.82;
+}
+
+:host-context(.dark-theme) .cloud {
+  background: rgb(103 143 169 / 24%);
+  filter: drop-shadow(0 8px 14px rgb(8 20 29 / 12%));
+}
+
+@keyframes cloud-drift {
+  from {
+    translate: 0;
+  }
+  to {
+    translate: var(--drift-distance, -80px) 0;
+  }
+}
+
+@keyframes sun-glow {
+  from {
+    box-shadow: 0 0 35px 8px rgb(255 224 138 / 24%);
+  }
+  to {
+    box-shadow: 0 0 55px 16px rgb(255 224 138 / 38%);
+  }
+}
+
+@keyframes moon-glow {
+  from {
+    box-shadow: 0 0 24px 4px rgb(247 237 201 / 17%), 0 0 70px 14px rgb(166 227 233 / 7%);
+  }
+  to {
+    box-shadow: 0 0 34px 7px rgb(247 237 201 / 24%), 0 0 90px 20px rgb(166 227 233 / 12%);
+  }
+}
+
+@keyframes star-twinkle {
+  from {
+    opacity: 0.35;
+    transform: scale(0.75);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud,
+  .sun,
+  .moon,
+  .star {
+    animation: none;
+  }
+}

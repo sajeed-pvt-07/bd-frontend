@@ -1,0 +1,304 @@
+<main class="admin-page">
+  <section class="admin-shell">
+    <header class="admin-header">
+      <div>
+        <p class="eyebrow">PRIVATE WORKSPACE</p>
+        <h1>App management</h1>
+        <p>Manage the content that powers the experience.</p>
+      </div>
+      @if (authorized) {
+        <button class="button button-quiet" type="button" (click)="logout()">Sign out</button>
+      }
+    </header>
+
+    @if (!authorized) {
+      <form class="login-card" (ngSubmit)="login(username.value, password.value); password.value = ''">
+        <h2>Admin sign in</h2>
+        <label for="admin-username">Username</label>
+        <input #username id="admin-username" name="username" autocomplete="username" required>
+        <label for="admin-password">Password</label>
+        <input #password id="admin-password" name="password" type="password" autocomplete="current-password" required>
+        <p class="hint">Your admin session is remembered in this browser for up to 24 hours.</p>
+        @if (error) {
+          <p class="message error" role="alert">{{ error }}</p>
+        }
+        <button class="button button-primary" type="submit" [disabled]="authLoading">
+          {{ authLoading ? 'Signing in…' : 'Sign in' }}
+        </button>
+      </form>
+    } @else {
+      <nav class="tabs" role="tablist" aria-label="Admin sections">
+        @for (tab of tabs; track tab.id) {
+          <button
+            class="tab"
+            type="button"
+            role="tab"
+            [id]="'tab-' + tab.id"
+            [attr.aria-selected]="activeTab === tab.id"
+            [attr.aria-controls]="'panel-' + tab.id"
+            (click)="selectTab(tab.id)"
+          >
+            {{ tab.label }}
+          </button>
+        }
+      </nav>
+
+      @if (error) {
+        <p class="message error" role="alert">{{ error }}</p>
+      }
+      @if (success) {
+        <p class="message success" role="status">{{ success }}</p>
+      }
+      @if (contentLoading) {
+        <p class="loading-state" role="status">Loading app content…</p>
+      }
+
+      @if (activeTab === 'analytics') {
+        <section id="panel-analytics" class="tab-panel analytics-panel" role="tabpanel" aria-labelledby="tab-analytics">
+          <app-admin-analytics></app-admin-analytics>
+        </section>
+      } @else if (activeTab === 'configs') {
+        <section id="panel-configs" class="tab-panel" role="tabpanel" aria-labelledby="tab-configs">
+          <div class="section-heading">
+            <div><h2>Configs</h2><p>Text and structured settings used throughout the app.</p></div>
+            <button class="button button-primary" type="button" (click)="newConfig()">New config</button>
+          </div>
+          <div class="manager-layout">
+            <form class="editor-card" (ngSubmit)="saveConfig()">
+              <h3>{{ editingConfig ? 'Edit config' : 'Create config' }}</h3>
+              <label for="config-key">Key</label>
+              <input id="config-key" name="config-key" [(ngModel)]="configDraft.key" required [readonly]="editingConfig">
+              <label for="config-value">Value</label>
+              <textarea id="config-value" name="config-value" [(ngModel)]="configDraft.value" rows="9" required></textarea>
+              <div class="form-actions">
+                <button class="button button-primary" type="submit" [disabled]="saving || !configDraft.key.trim()">{{ saving ? 'Saving…' : 'Save config' }}</button>
+                <button class="button button-quiet" type="button" [disabled]="saving" (click)="newConfig()">{{ editingConfig ? 'Cancel edit' : 'Clear' }}</button>
+              </div>
+            </form>
+            <div class="record-list" aria-label="Saved configs">
+              @for (config of configs; track config.id || config.key) {
+                <article class="record-card">
+                  <div class="record-copy"><h3>{{ config.key }}</h3><p class="record-preview">{{ config.value }}</p></div>
+                  <div class="record-actions">
+                    <button class="button button-quiet" type="button" (click)="editConfig(config)">Edit</button>
+                    <button class="button button-danger" type="button" (click)="deleteConfig(config)">Delete</button>
+                  </div>
+                </article>
+              } @empty {
+                <p class="empty-state">No configs found.</p>
+              }
+            </div>
+          </div>
+        </section>
+      } @else if (activeTab === 'users') {
+        <section id="panel-users" class="tab-panel" role="tabpanel" aria-labelledby="tab-users">
+          <div class="section-heading">
+            <div><h2>Users</h2><p>Profiles available in the experience. Archiving a user also archives their greetings and timeline items.</p></div>
+            <button class="button button-primary" type="button" (click)="newUser()">New user</button>
+          </div>
+          <div class="manager-layout">
+            <form class="editor-card" (ngSubmit)="saveUser()">
+              <h3>{{ userDraft.id ? 'Edit user' : 'Create user' }}</h3>
+              <label for="user-name">Display name</label>
+              <input id="user-name" name="user-name" [(ngModel)]="userDraft.name" required>
+              <label for="user-avatar">Avatar URL</label>
+              <input id="user-avatar" name="user-avatar" type="url" [(ngModel)]="userDraft.dp" required>
+              <label for="user-background">Background URL</label>
+              <input id="user-background" name="user-background" type="url" [(ngModel)]="userDraft.background">
+              <label for="user-precedence">Display order</label>
+              <input id="user-precedence" name="user-precedence" type="number" step="1" [(ngModel)]="userDraft.precedence" required>
+              <div class="form-actions">
+                <button class="button button-primary" type="submit" [disabled]="saving || !userDraft.name.trim()">{{ saving ? 'Saving…' : 'Save user' }}</button>
+                <button class="button button-quiet" type="button" [disabled]="saving" (click)="newUser()">{{ userDraft.id ? 'Cancel edit' : 'Clear' }}</button>
+              </div>
+            </form>
+            <div class="record-list" aria-label="Users">
+              @for (user of users; track user.id) {
+                <article class="record-card">
+                  <div class="record-copy">
+                    <h3>{{ user.name }} <span class="status" [class.archived]="!isActive(user.active)">{{ isActive(user.active) ? 'Active' : 'Archived' }}</span></h3>
+                    <p class="record-preview">Order {{ user.precedence ?? 0 }} · {{ user.id }}</p>
+                  </div>
+                  <div class="record-actions">
+                    <button class="button button-quiet" type="button" (click)="editUser(user)">Edit</button>
+                    <button class="button" [class.button-danger]="isActive(user.active)" [class.button-quiet]="!isActive(user.active)" type="button" (click)="toggleUserArchive(user)">{{ isActive(user.active) ? 'Archive' : 'Restore' }}</button>
+                  </div>
+                </article>
+              } @empty {
+                <p class="empty-state">No users found.</p>
+              }
+            </div>
+          </div>
+        </section>
+      } @else if (activeTab === 'greetings') {
+        <section id="panel-greetings" class="tab-panel" role="tabpanel" aria-labelledby="tab-greetings">
+          <div class="section-heading">
+            <div><h2>Greetings</h2><p>Manage each profile’s personal greeting.</p></div>
+            <button class="button button-primary" type="button" (click)="newGreeting()">New greeting</button>
+          </div>
+          <div class="manager-layout">
+            <form class="editor-card" (ngSubmit)="saveGreeting()">
+              <h3>{{ greetingDraft.id ? 'Edit greeting' : 'Create greeting' }}</h3>
+              <label for="greeting-user">Profile</label>
+              <select id="greeting-user" name="greeting-user" [(ngModel)]="greetingDraft.userId" required>
+                <option value="" disabled>Select a profile</option>
+                @for (user of users; track user.id) {
+                  <option [value]="user.id">{{ user.name }}{{ isActive(user.active) ? '' : ' (archived)' }}</option>
+                }
+              </select>
+              <label for="greeting-message">Greeting text</label>
+              <textarea id="greeting-message" name="greeting-message" [(ngModel)]="greetingDraft.message" rows="8" required></textarea>
+              <div class="form-actions">
+                <button class="button button-primary" type="submit" [disabled]="saving || !greetingDraft.userId || !greetingDraft.message.trim()">{{ saving ? 'Saving…' : 'Save greeting' }}</button>
+                <button class="button button-quiet" type="button" [disabled]="saving" (click)="newGreeting()">{{ greetingDraft.id ? 'Cancel edit' : 'Clear' }}</button>
+              </div>
+            </form>
+            <div class="record-list" aria-label="Greetings">
+              @for (greeting of greetings; track greeting.id) {
+                <article class="record-card">
+                  <div class="record-copy">
+                    <h3>{{ userName(greeting.userId) }} <span class="status" [class.archived]="!isActive(greeting.active)">{{ isActive(greeting.active) ? 'Active' : 'Archived' }}</span></h3>
+                    <p class="record-preview">{{ greeting.message }}</p>
+                  </div>
+                  <div class="record-actions">
+                    <button class="button button-quiet" type="button" (click)="editGreeting(greeting)">Edit</button>
+                    <button class="button" [class.button-danger]="isActive(greeting.active)" [class.button-quiet]="!isActive(greeting.active)" type="button" (click)="toggleGreetingArchive(greeting)">{{ isActive(greeting.active) ? 'Archive' : 'Restore' }}</button>
+                  </div>
+                </article>
+              } @empty {
+                <p class="empty-state">No greetings found.</p>
+              }
+            </div>
+          </div>
+        </section>
+      } @else if (activeTab === 'timeline') {
+        <section id="panel-timeline" class="tab-panel" role="tabpanel" aria-labelledby="tab-timeline">
+          <div class="section-heading">
+            <div><h2>Timeline</h2><p>Manage moments, dates, special cards, media, and chat messages.</p></div>
+            <button class="button button-primary" type="button" (click)="newTimelineItem()">New timeline item</button>
+          </div>
+          <div class="manager-layout">
+            <form class="editor-card timeline-editor" (ngSubmit)="saveTimelineItem()">
+              <h3>{{ timelineDraft.id ? 'Edit timeline item' : 'Create timeline item' }}</h3>
+              <label for="timeline-user">Profile</label>
+              <select id="timeline-user" name="timeline-user" [(ngModel)]="timelineDraft.userId" required>
+                <option value="" disabled>Select a profile</option>
+                @for (user of users; track user.id) {
+                  <option [value]="user.id">{{ user.name }}{{ isActive(user.active) ? '' : ' (archived)' }}</option>
+                }
+              </select>
+              <label for="timeline-title">Title</label>
+              <input id="timeline-title" name="timeline-title" [(ngModel)]="timelineDraft.title" required>
+              <label for="timeline-description">Description</label>
+              <textarea id="timeline-description" name="timeline-description" [(ngModel)]="timelineDraft.description" rows="4" required></textarea>
+              <label for="timeline-takeaway">Takeaway <span class="optional">(optional)</span></label>
+              <textarea id="timeline-takeaway" name="timeline-takeaway" [(ngModel)]="timelineDraft.takeaway" rows="3"></textarea>
+              <div class="inline-fields">
+                <div><label for="timeline-date">Event date</label><input id="timeline-date" name="timeline-date" type="date" [(ngModel)]="timelineDraft.eventDate"></div>
+                <label class="checkbox-label"><input name="timeline-special" type="checkbox" [(ngModel)]="timelineDraft.special"> Special moment</label>
+              </div>
+
+              <section class="nested-editor" aria-label="Media items">
+                <div class="nested-heading"><h4>Media</h4><button class="button button-quiet" type="button" (click)="addMedia()">Add media</button></div>
+                @for (media of timelineDraft.media ?? []; track $index; let i = $index) {
+                  <div class="nested-row">
+                    <label [for]="'media-type-' + i">Type</label>
+                    <select [id]="'media-type-' + i" [name]="'media-type-' + i" [(ngModel)]="media.type">
+                      @for (type of mediaTypes; track type) { <option [value]="type">{{ type }}</option> }
+                    </select>
+                    <label [for]="'media-url-' + i">URL</label>
+                    <input [id]="'media-url-' + i" [name]="'media-url-' + i" type="url" [(ngModel)]="media.url">
+                    <label [for]="'media-caption-' + i">Caption</label>
+                    <input [id]="'media-caption-' + i" [name]="'media-caption-' + i" [(ngModel)]="media.caption">
+                    <button class="button button-danger" type="button" (click)="removeMedia(i)">Remove media</button>
+                  </div>
+                } @empty { <p class="hint">No media attached.</p> }
+              </section>
+
+              <section class="nested-editor" aria-label="Chat messages">
+                <div class="nested-heading"><h4>Chat messages</h4><button class="button button-quiet" type="button" (click)="addChat()">Add message</button></div>
+                @for (chat of timelineDraft.chats ?? []; track $index; let i = $index) {
+                  <div class="nested-row">
+                    <label [for]="'chat-speaker-' + i">Speaker</label>
+                    <select [id]="'chat-speaker-' + i" [name]="'chat-speaker-' + i" [(ngModel)]="chat.speaker">
+                      @for (speaker of chatSpeakers; track speaker) { <option [value]="speaker">{{ speaker === 'ME' ? 'Me' : 'You' }}</option> }
+                    </select>
+                    <label [for]="'chat-message-' + i">Message</label>
+                    <textarea [id]="'chat-message-' + i" [name]="'chat-message-' + i" [(ngModel)]="chat.message" rows="2"></textarea>
+                    <button class="button button-danger" type="button" (click)="removeChat(i)">Remove message</button>
+                  </div>
+                } @empty { <p class="hint">No chat messages attached.</p> }
+              </section>
+
+              <div class="form-actions">
+                <button class="button button-primary" type="submit" [disabled]="saving || !timelineDraft.userId || !timelineDraft.title.trim() || !timelineDraft.description.trim()">{{ saving ? 'Saving…' : 'Save timeline item' }}</button>
+                <button class="button button-quiet" type="button" [disabled]="saving" (click)="newTimelineItem()">{{ timelineDraft.id ? 'Cancel edit' : 'Clear' }}</button>
+              </div>
+            </form>
+            <div class="record-list" aria-label="Timeline items">
+              @for (item of timelineItems; track item.id) {
+                <article class="record-card">
+                  <div class="record-copy">
+                    <h3>{{ item.title }} <span class="status" [class.archived]="!isActive(item.active)">{{ isActive(item.active) ? 'Active' : 'Archived' }}</span></h3>
+                    <p class="record-meta">{{ userName(item.userId) }} · {{ item.eventDate || 'Undated' }}{{ item.special ? ' · Special' : '' }}</p>
+                    <p class="record-preview">{{ item.description }}</p>
+                    <p class="record-meta">{{ item.media?.length ?? 0 }} media · {{ item.chats?.length ?? 0 }} chat messages</p>
+                  </div>
+                  <div class="record-actions">
+                    <button class="button button-quiet" type="button" (click)="editTimelineItem(item)">Edit</button>
+                    <button class="button" [class.button-danger]="isActive(item.active)" [class.button-quiet]="!isActive(item.active)" type="button" (click)="toggleTimelineArchive(item)">{{ isActive(item.active) ? 'Archive' : 'Restore' }}</button>
+                  </div>
+                </article>
+              } @empty {
+                <p class="empty-state">No timeline items found.</p>
+              }
+            </div>
+          </div>
+        </section>
+      } @else {
+        <section id="panel-songs" class="tab-panel" role="tabpanel" aria-labelledby="tab-songs">
+          <div class="section-heading">
+            <div><h2>Songs</h2><p>Manage background music and cover tracks.</p></div>
+            <button class="button button-primary" type="button" (click)="newSong()">New song</button>
+          </div>
+          <div class="manager-layout">
+            <form class="editor-card" (ngSubmit)="saveSong()">
+              <h3>{{ songDraft.id ? 'Edit song' : 'Create song' }}</h3>
+              <label for="song-name">Name</label>
+              <input id="song-name" name="song-name" [(ngModel)]="songDraft.name" required>
+              <label for="song-url">Audio URL</label>
+              <input id="song-url" name="song-url" type="url" [(ngModel)]="songDraft.r2Url" required>
+              <label for="song-type">Type</label>
+              <select id="song-type" name="song-type" [(ngModel)]="songDraft.type" required>
+                @for (type of songTypes; track type) { <option [value]="type">{{ type === 'bgm' ? 'Background music' : 'Cover' }}</option> }
+              </select>
+              <label for="song-priority">Play order</label>
+              <input id="song-priority" name="song-priority" type="number" step="1" [(ngModel)]="songDraft.priority" required>
+              <div class="form-actions">
+                <button class="button button-primary" type="submit" [disabled]="saving || !songDraft.name.trim() || !songDraft.r2Url.trim()">{{ saving ? 'Saving…' : 'Save song' }}</button>
+                <button class="button button-quiet" type="button" [disabled]="saving" (click)="newSong()">{{ songDraft.id ? 'Cancel edit' : 'Clear' }}</button>
+              </div>
+            </form>
+            <div class="record-list" aria-label="Songs">
+              @for (song of songs; track song.id) {
+                <article class="record-card">
+                  <div class="record-copy">
+                    <h3>{{ song.name }} <span class="status" [class.archived]="!isActive(song.active)">{{ isActive(song.active) ? 'Active' : 'Archived' }}</span></h3>
+                    <p class="record-preview">{{ song.type }} · order {{ song.priority }}</p>
+                    <p class="record-preview">{{ song.r2Url }}</p>
+                  </div>
+                  <div class="record-actions">
+                    <button class="button button-quiet" type="button" (click)="editSong(song)">Edit</button>
+                    <button class="button" [class.button-danger]="isActive(song.active)" [class.button-quiet]="!isActive(song.active)" type="button" (click)="toggleSongArchive(song)">{{ isActive(song.active) ? 'Archive' : 'Restore' }}</button>
+                  </div>
+                </article>
+              } @empty {
+                <p class="empty-state">No songs found.</p>
+              }
+            </div>
+          </div>
+        </section>
+      }
+    }
+  </section>
+</main>

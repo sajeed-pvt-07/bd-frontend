@@ -1,0 +1,46 @@
+<main class="open-when-page">
+  <header class="notes-header">
+    <span class="notes-eyebrow">A little note, whenever you need one</span>
+    <h1>Open when...</h1>
+    <p>Choose a note. Take the words you need, and leave the rest for another day.</p>
+  </header>
+
+  @if (viewModel$ | async; as viewModel) {
+    @if (viewModel.error) {
+      <section class="notes-error" role="alert">{{ viewModel.error }}</section>
+    } @else if (viewModel.notes.length) {
+      <section class="notes-list" aria-label="Choose a note to open">
+        @for (note of viewModel.notes; track note.id; let index = $index) {
+          <article class="note-card" [class.is-open]="isNoteOpen(note.id)">
+            <button
+              class="note-toggle"
+              type="button"
+              [attr.aria-expanded]="isNoteOpen(note.id)"
+              [attr.aria-controls]="'note-message-' + index"
+              (click)="toggleNote(note.id)"
+            >
+              <span class="note-symbol" aria-hidden="true">✉</span>
+              <span class="note-label">{{ note.prompt }}</span>
+              <span class="note-action">{{ isNoteOpen(note.id) ? 'Close note' : 'Open note' }}</span>
+            </button>
+            <div
+              class="note-message"
+              [id]="'note-message-' + index"
+              [hidden]="!isNoteOpen(note.id)"
+            >
+              <h2>{{ note.title }}</h2>
+              <p>{{ note.message }}</p>
+            </div>
+          </article>
+        }
+      </section>
+    } @else {
+      <section class="notes-empty" role="status">There are no notes here just yet.</section>
+    }
+  }
+
+  <nav class="notes-navigation" aria-label="Journey navigation">
+    <a class="notes-link secondary-link" routerLink="/thank-you">Back to thank you</a>
+    <a class="notes-link" routerLink="/home" (click)="replayJourney()">Replay the journey</a>
+  </nav>
+</main>

@@ -1,0 +1,73 @@
+<main class="birthday-page">
+  @if (loading$ | async) {
+    <app-loading-indicator label="Loading celebration..."></app-loading-indicator>
+  } @else {
+    @if (configs$ | async; as configs) {
+      <section class="celebration-card" aria-live="polite">
+      @if (phase === 'balloons') {
+        <p class="eyebrow">{{ configs.get('birthday-intro') }}</p>
+        <p class="instructions">{{ configs.get('birthday-instructions') }}</p>
+        <div class="balloon-field" aria-label="Birthday balloons">
+          @for (balloon of balloons; track balloon.id) {
+            @if (poppedBalloons.has(balloon.id)) {
+              <span class="pop-burst" aria-hidden="true">✦</span>
+            } @else {
+              <button
+                type="button"
+                class="balloon"
+                [style.--balloon-color]="balloon.color"
+                [attr.aria-label]="configs.get('birthday-balloon-label') + ' ' + (balloon.id + 1)"
+                (click)="popBalloon(balloon.id)"
+              >
+                <span class="balloon-shine" aria-hidden="true"></span>
+                <span class="balloon-string" aria-hidden="true"></span>
+              </button>
+            }
+          }
+        </div>
+        <p class="balloon-progress">{{ poppedBalloons.size }} / {{ balloons.length }}</p>
+      } @else {
+        <div class="birthday-copy">
+          <h1>{{ configs.get('birthday-title') }}</h1>
+          <p class="birthday-message">{{ configs.get('birthday-message') }}</p>
+          @if (phase === 'candles') {
+            <p class="phase-message">{{ configs.get('birthday-candle-prompt') }}</p>
+          } @else if (phase === 'blown-out') {
+            <p class="phase-message">{{ configs.get('birthday-candles-out') }}</p>
+          } @else {
+            <p class="phase-message">{{ configs.get('birthday-cake-message') }}</p>
+          }
+        </div>
+
+        <div class="cake-scene" [class.cake-cut]="phase === 'cake-cut' || phase === 'complete'">
+          <div class="cake">
+            <div class="candles" aria-hidden="true">
+              <span class="candle">@if (phase === 'candles') { <i></i> }</span>
+              <span class="candle">@if (phase === 'candles') { <i></i> }</span>
+              <span class="candle">@if (phase === 'candles') { <i></i> }</span>
+              <span class="candle">@if (phase === 'candles') { <i></i> }</span>
+              <span class="candle">@if (phase === 'candles') { <i></i> }</span>
+            </div>
+            <div class="cake-top"></div>
+            <div class="cake-layer cake-layer-top"></div>
+            <div class="cake-layer cake-layer-bottom"></div>
+            <div class="cake-plate"></div>
+          </div>
+          <div class="cake-slice" aria-hidden="true">
+            <span></span>
+          </div>
+        </div>
+
+        @if (phase === 'complete') {
+          <div class="continue-prompt">
+            <p>{{ configs.get('birthday-continue-message') }}</p>
+            <button type="button" class="continue-button" (click)="continueToUserSelection()">
+              {{ configs.get('birthday-continue-button') }}
+            </button>
+          </div>
+        }
+      }
+      </section>
+    }
+  }
+</main>

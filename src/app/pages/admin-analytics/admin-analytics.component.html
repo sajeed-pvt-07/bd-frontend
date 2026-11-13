@@ -1,0 +1,234 @@
+<main class="analytics-page">
+  <section class="analytics-shell" aria-labelledby="analytics-title">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">PRIVATE DASHBOARD</p>
+        <h1 id="analytics-title">Visitor analytics</h1>
+        <p class="subtitle">Anonymous visitor IDs are used instead of IP addresses.</p>
+      </div>
+    </header>
+
+    <p *ngIf="!summary && error" class="error-message" role="alert">{{ error }}</p>
+
+    <ng-container *ngIf="summary as data">
+      <div class="dashboard-controls">
+        <label for="date-range">Date range</label>
+        <select id="date-range" [value]="days" (change)="onRangeChange($event)" [disabled]="loading">
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+          <option value="365">Last 365 days</option>
+          <option value="all">All time</option>
+        </select>
+        <span *ngIf="loading" class="loading-label" role="status">Updating…</span>
+        <span *ngIf="lastRefreshedAt" class="refresh-time">Updated {{ lastRefreshedAt | date:'shortTime':'Asia/Kolkata' }} IST</span>
+        <span class="control-spacer"></span>
+        <button class="secondary-button" type="button" (click)="refresh()" [disabled]="loading">Refresh</button>
+        <button class="secondary-button" type="button" (click)="exportCsv()" [disabled]="loading || !visitors.length">Export CSV</button>
+      </div>
+      <p *ngIf="error" class="error-message" role="alert">{{ error }}</p>
+
+      <section class="metric-grid" aria-label="Overview">
+        <article class="metric-card"><span>Visitors</span><strong>{{ data.uniqueVisitors | number }}</strong></article>
+        <article class="metric-card"><span>Sessions</span><strong>{{ data.sessions | number }}</strong></article>
+        <article class="metric-card"><span>Page views</span><strong>{{ data.pageViews | number }}</strong></article>
+        <article class="metric-card"><span>Avg. time per page</span><strong>{{ formatDuration(data.averagePageDurationSeconds) }}</strong></article>
+      </section>
+
+      <section class="insights-grid" aria-label="Analytics breakdowns">
+        <article class="insight-card">
+          <h2>Daily page views</h2>
+          <p *ngIf="!data.dailyPageViews.length" class="muted">No page views in this period.</p>
+          <div *ngIf="data.dailyPageViews.length" class="daily-chart" role="img" aria-label="Daily page views">
+            <div class="daily-column" *ngFor="let day of data.dailyPageViews">
+              <span class="daily-value">{{ day.count }}</span>
+              <div class="daily-bar" [style.height.%]="barWidth(day.count, data.dailyPageViews)"></div>
+              <span class="daily-date">{{ day.date | date:'MMM d':'Asia/Kolkata' }}</span>
+            </div>
+          </div>
+        </article>
+        <article class="insight-card">
+          <h2>Top pages</h2>
+          <ng-container *ngTemplateOutlet="rankedList; context: { $implicit: data.topPages }"></ng-container>
+        </article>
+        <article class="insight-card">
+          <h2>Top songs</h2>
+          <ng-container *ngTemplateOutlet="rankedList; context: { $implicit: data.topSongs }"></ng-container>
+        </article>
+        <article class="insight-card">
+          <h2>Theme preference</h2>
+          <ng-container *ngTemplateOutlet="rankedList; context: { $implicit: data.themes }"></ng-container>
+        </article>
+        <article class="insight-card">
+          <h2>Devices and browsers</h2>
+          <ng-container *ngTemplateOutlet="rankedList; context: { $implicit: data.devices }"></ng-container>
+          <ng-container *ngTemplateOutlet="rankedList; context: { $implicit: data.browsers }"></ng-container>
+        </article>
+        <article class="insight-card">
+          <h2>Event counts</h2>
+          <p *ngIf="!data.events.length" class="muted">No data</p>
+          <ol *ngIf="data.events.length" class="ranked-list">
+            <li *ngFor="let item of data.events">
+              <div class="ranked-label"><span>{{ eventLabel(item.name) }}</span><strong>{{ item.count | number }}</strong></div>
+              <div class="track"><span [style.width.%]="barWidth(item.count, data.events)"></span></div>
+            </li>
+          </ol>
+        </article>
+      </section>
+
+      <section class="visitor-list" aria-label="Visitors and sessions">
+        <div class="list-heading">
+          <h2>Visitors</h2>
+          <span>{{ visitors.length }}{{ search ? ' matching' : '' }} of {{ totalVisitorCount }} in selected period</span>
+        </div>
+        <label class="search-control" for="visitor-search">
+          <span>Search visitors and activity</span>
+          <input
+            id="visitor-search"
+            type="search"
+            [(ngModel)]="search"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Visitor ID, song, profile, or event"
+          >
+        </label>
+        <p *ngIf="!visitorDetailsSupported" class="empty-state" role="status">
+          Visitor and session details are not available from the backend yet. Deploy/restart the updated backend, then refresh this dashboard.
+        </p>
+        <p *ngIf="visitorDetailsSupported && !visitors.length" class="empty-state">No visitor activity in this period.</p>
+
+        <article class="visitor-card" *ngFor="let visitor of visitors">
+          <button
+            type="button"
+            class="visitor-summary"
+            [attr.aria-expanded]="expandedVisitorId === visitor.visitorId"
+            (click)="toggleVisitor(visitor)"
+          >
+            <span class="visitor-identity">
+              <span class="expand-indicator" aria-hidden="true">{{ expandedVisitorId === visitor.visitorId ? '−' : '+' }}</span>
+              <span>
+                <strong>{{ visitorLabel(visitor.visitorId) }}</strong>
+                <small>{{ visitor.device }} · {{ visitor.browser }}</small>
+              </span>
+            </span>
+            <span class="visitor-last-seen">
+              <strong>{{ visitor.sessions.length }} {{ visitor.sessions.length === 1 ? 'session' : 'sessions' }}</strong>
+              <small>Last visited {{ visitor.lastSeen | date:'medium':'Asia/Kolkata' }} IST</small>
+            </span>
+          </button>
+
+          <div class="visitor-sessions" *ngIf="expandedVisitorId === visitor.visitorId">
+            <article class="session-card" *ngFor="let session of visitor.sessions">
+              <header class="session-heading">
+                <div>
+                  <h3>Session · {{ session.sessionId.slice(0, 8) }}</h3>
+                  <p>Started {{ session.startedAt | date:'medium':'Asia/Kolkata' }} IST · Last active {{ session.lastSeen | date:'shortTime':'Asia/Kolkata' }} IST</p>
+                </div>
+              </header>
+
+              <div class="session-table-wrap">
+                <table class="session-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Page</th>
+                      <th scope="col" *ngFor="let page of ['home', 'birthday-celebration', 'user-selection', 'greeting', 'timeline', 'thank-you', 'open-when']">
+                        {{ pageLabel(page) }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Visits</th>
+                      <td *ngFor="let page of ['home', 'birthday-celebration', 'user-selection', 'greeting', 'timeline', 'thank-you', 'open-when']">
+                        <span
+                          class="visit-mark"
+                          [class.visited]="session.pageViews[page] > 0"
+                          [attr.aria-label]="session.pageViews[page] > 0 ? pageLabel(page) + ': ' + session.pageViews[page] + ' visits' : pageLabel(page) + ': not visited'"
+                          [title]="session.pageViews[page] > 0 ? session.pageViews[page] + ' visit(s)' : 'Not visited'"
+                        >{{ session.pageViews[page] > 0 ? '✓ ' + session.pageViews[page] : '×' }}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="session-details">
+                <section class="detail-group">
+                  <h4>Songs played</h4>
+                  <p *ngIf="!session.songs.length" class="muted">None</p>
+                  <span class="detail-chip" *ngFor="let song of session.songs" [title]="song.name + ' played ' + song.count + ' time(s)'">
+                    {{ song.name }} <b>×{{ song.count }}</b>
+                  </span>
+                </section>
+                <section class="detail-group">
+                  <h4>Profiles selected</h4>
+                  <p *ngIf="!session.selections.length" class="muted">None</p>
+                  <span class="detail-chip" *ngFor="let profile of session.selections">
+                    {{ profile.name }} <b>×{{ profile.count }}</b>
+                  </span>
+                </section>
+                <section class="detail-group">
+                  <h4>Greeting visits</h4>
+                  <p *ngIf="!session.greetings.length" class="muted">None</p>
+                  <span class="detail-chip" *ngFor="let profile of session.greetings">
+                    {{ profile.name }} <b>×{{ profile.count }}</b>
+                  </span>
+                </section>
+                <section class="detail-group">
+                  <h4>Timeline visits</h4>
+                  <p *ngIf="!session.timelines.length" class="muted">None</p>
+                  <span class="detail-chip" *ngFor="let profile of session.timelines">
+                    {{ profile.name }} <b>×{{ profile.count }}</b>
+                  </span>
+                </section>
+                <section class="detail-group" *ngIf="session.otherEvents.length">
+                  <h4>Other actions</h4>
+                  <span class="detail-chip" *ngFor="let action of session.otherEvents">
+                  {{ eventLabel(action.name) }} <b>×{{ action.count }}</b>
+                  </span>
+                </section>
+              </div>
+
+              <details class="activity-details">
+                <summary>Full activity log · {{ session.activity.length }} events</summary>
+                <div class="activity-table-wrap">
+                  <table class="activity-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Time</th>
+                        <th scope="col">Action</th>
+                        <th scope="col">Page</th>
+                        <th scope="col">Details</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let event of session.activity">
+                        <td>{{ event.recordedAt | date:'medium':'Asia/Kolkata' }} IST</td>
+                        <td>{{ eventLabel(event.type) }}</td>
+                        <td>{{ event.page ? pageLabel(event.page) : '—' }}</td>
+                        <td>
+                          {{ event.song || event.profileName || event.theme || '—' }}
+                          <span *ngIf="event.durationSeconds !== null"> · {{ formatDuration(event.durationSeconds) }}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </details>
+            </article>
+          </div>
+        </article>
+      </section>
+      <p class="privacy-note">The visitor key is a random ID stored in this browser, not an IP address or device fingerprint. Selected profile names are included for selection, greeting, and timeline counts. Analytics events are retained until you remove them from MongoDB. CSV is useful for archiving and analysis; configure MongoDB backups for recovery.</p>
+    </ng-container>
+
+    <ng-template #rankedList let-items>
+      <p *ngIf="!items?.length" class="muted">No data</p>
+      <ol *ngIf="items?.length" class="ranked-list">
+        <li *ngFor="let item of items">
+          <div class="ranked-label"><span>{{ item.name }}</span><strong>{{ item.count | number }}</strong></div>
+          <div class="track"><span [style.width.%]="barWidth(item.count, items)"></span></div>
+        </li>
+      </ol>
+    </ng-template>
+  </section>
+</main>
