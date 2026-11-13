@@ -48,7 +48,7 @@ export class AppComponent {
       .subscribe(() => this.updateAdminRouteState());
   }
 
-  title = 'frontend';
+  title = 'emi-ka-budday';
   isDark$ = this.themeService.isDark$;
 
   ngOnInit() {
