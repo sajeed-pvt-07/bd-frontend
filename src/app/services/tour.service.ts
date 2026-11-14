@@ -22,6 +22,7 @@ import { AnalyticsService } from './analytics.service';
 export class TourService {
   private driverInstance: any = null;
   private toursCompleted: Set<string> = new Set();
+  private welcomeTourStarted = false;
   private readonly analyticsService = inject(AnalyticsService);
   private readonly labelSkipTour = (popover: PopoverDOM): void => {
     popover.closeButton.textContent = 'Skip tour';
@@ -58,7 +59,10 @@ export class TourService {
   private showPageSpecificTour(url: string): void {
     // Delay to ensure page is rendered
     setTimeout(() => {
-      if (url.includes('/birthday-celebration')) {
+      if (url.includes('/home') || url === '/') {
+        this.startWelcomeTour();
+        this.toursCompleted.add(url);
+      } else if (url.includes('/birthday-celebration')) {
         this.startBirthdayCelebrationTour();
         this.toursCompleted.add(url);
       } else if (url.includes('/user-selection')) {
@@ -84,6 +88,11 @@ export class TourService {
    * Start welcome tour (shown on first visit)
    */
   startWelcomeTour(): void {
+    if (this.welcomeTourStarted || this.driverInstance) {
+      return;
+    }
+
+    this.welcomeTourStarted = true;
     this.runTour(WELCOME_TOUR_STEPS);
   }
 
