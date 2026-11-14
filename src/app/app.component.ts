@@ -79,10 +79,6 @@ export class AppComponent {
     return this.router.url === '/home';
   }
 
-  get isThankYouPage() {
-    return this.router.url.split(/[?#]/, 1)[0].split('/').filter(Boolean)[0] === 'thank-you';
-  }
-
   private updateAdminRouteState(): void {
     this.isAdminPage =
       this.router.url.split(/[?#]/, 1)[0].split('/').filter(Boolean)[0] === 'admin';

@@ -179,6 +179,99 @@ export const TIMELINE_TOUR_STEPS = [
   },
 ];
 
+export const THANK_YOU_TOUR_STEPS = [
+  {
+    element: '.thank-you-wheel',
+    popover: {
+      title: '💙 A hundred little thank-yous',
+      description: 'This ring gathers a hundred ways to say thank you. Watch the phrases appear around the center.',
+      side: 'over' as const,
+      align: 'center' as const,
+    },
+  },
+  {
+    element: '.wheel-center',
+    popover: {
+      title: '✨ One phrase at a time',
+      description: 'The center highlights the phrase currently being shown. Tap or hover over phrases around the ring to read them.',
+      side: 'bottom' as const,
+      align: 'center' as const,
+    },
+  },
+  {
+    element: '.thank-you-actions',
+    popover: {
+      title: '📬 Keep exploring',
+      description: 'Open a little note or replay the journey whenever you like.',
+      side: 'top' as const,
+      align: 'center' as const,
+    },
+  },
+];
+
+export const THANK_YOU_FALLBACK_TOUR_STEPS = [
+  {
+    element: '.thank-you-page',
+    popover: {
+      title: '💙 The last little thank-you',
+      description: 'This is the closing page of the journey. Its thank-you ring will appear once the page content is ready.',
+      side: 'over' as const,
+      align: 'center' as const,
+    },
+  },
+];
+
+export const OPEN_WHEN_TOUR_STEPS = [
+  {
+    element: '.notes-header',
+    popover: {
+      title: '💌 A note for the moment',
+      description: 'Choose a prompt that fits how you are feeling or what you need right now.',
+      side: 'bottom' as const,
+      align: 'center' as const,
+    },
+  },
+  {
+    element: '.note-card',
+    popover: {
+      title: '✉️ Open a note',
+      description: 'Tap a card to reveal its message. Tap it again to close it.',
+      side: 'bottom' as const,
+      align: 'center' as const,
+    },
+  },
+  {
+    element: '.notes-navigation',
+    popover: {
+      title: '↩️ Come back or replay',
+      description: 'Return to the thank-you page or start the journey again from here.',
+      side: 'top' as const,
+      align: 'center' as const,
+    },
+  },
+];
+
+export const OPEN_WHEN_EMPTY_TOUR_STEPS = [
+  {
+    element: '.notes-header',
+    popover: {
+      title: '💌 A note for the moment',
+      description: 'This page is where you can open a note whenever you need one.',
+      side: 'bottom' as const,
+      align: 'center' as const,
+    },
+  },
+  {
+    element: '.notes-navigation',
+    popover: {
+      title: '↩️ Come back or replay',
+      description: 'Return to the thank-you page or start the journey again from here.',
+      side: 'top' as const,
+      align: 'center' as const,
+    },
+  },
+];
+
 /**
  * Alternative tour steps - Music Player focused
  */

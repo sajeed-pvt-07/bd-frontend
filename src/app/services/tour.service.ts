@@ -7,6 +7,10 @@ import {
   USER_SELECTION_TOUR_STEPS,
   GREETING_TOUR_STEPS,
   TIMELINE_TOUR_STEPS,
+  THANK_YOU_TOUR_STEPS,
+  THANK_YOU_FALLBACK_TOUR_STEPS,
+  OPEN_WHEN_TOUR_STEPS,
+  OPEN_WHEN_EMPTY_TOUR_STEPS,
 } from '../config/tour-config';
 import { filter } from 'rxjs/operators';
 import { PopoverDOM } from 'driver.js';
@@ -54,10 +58,7 @@ export class TourService {
   private showPageSpecificTour(url: string): void {
     // Delay to ensure page is rendered
     setTimeout(() => {
-      if (url.includes('/home') || url === '/') {
-        this.startWelcomeTour();
-        this.toursCompleted.add(url);
-      } else if (url.includes('/birthday-celebration')) {
+      if (url.includes('/birthday-celebration')) {
         this.startBirthdayCelebrationTour();
         this.toursCompleted.add(url);
       } else if (url.includes('/user-selection')) {
@@ -68,6 +69,12 @@ export class TourService {
         this.toursCompleted.add(url);
       } else if (url.includes('/timeline')) {
         this.startTimelineTour();
+        this.toursCompleted.add(url);
+      } else if (url.includes('/thank-you')) {
+        this.startThankYouTour();
+        this.toursCompleted.add(url);
+      } else if (url.includes('/open-when')) {
+        this.startOpenWhenTour();
         this.toursCompleted.add(url);
       }
     }, 500);
@@ -95,6 +102,10 @@ export class TourService {
       tourSteps = GREETING_TOUR_STEPS;
     } else if (currentRoute.includes('timeline')) {
       tourSteps = TIMELINE_TOUR_STEPS;
+    } else if (currentRoute.includes('thank-you')) {
+      tourSteps = this.getThankYouTourSteps();
+    } else if (currentRoute.includes('open-when')) {
+      tourSteps = this.getOpenWhenTourSteps();
     }
 
     this.runTour(tourSteps);
@@ -143,11 +154,31 @@ export class TourService {
     });
   }
 
+  startThankYouTour(): void {
+    this.runTour(this.getThankYouTourSteps());
+  }
+
+  startOpenWhenTour(): void {
+    this.runTour(this.getOpenWhenTourSteps());
+  }
+
   /**
    * Start custom tour with specified steps
    */
   startCustomTour(steps: any[]): void {
     this.runTour(steps);
+  }
+
+  private getThankYouTourSteps(): any[] {
+    return document.querySelector('.thank-you-wheel')
+      ? THANK_YOU_TOUR_STEPS
+      : THANK_YOU_FALLBACK_TOUR_STEPS;
+  }
+
+  private getOpenWhenTourSteps(): any[] {
+    return document.querySelector('.note-card')
+      ? OPEN_WHEN_TOUR_STEPS
+      : OPEN_WHEN_EMPTY_TOUR_STEPS;
   }
 
   private runTour(steps: any[]): void {
