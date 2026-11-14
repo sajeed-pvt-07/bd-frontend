@@ -53,6 +53,12 @@
   background: var(--primary-hover);
 }
 
+.selected-action .name {
+  font-family: $cursive-font;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
 @media (max-width: 900px) {
   .selected-action {
     display: none;
