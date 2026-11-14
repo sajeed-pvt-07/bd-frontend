@@ -14,9 +14,9 @@
   align-items: center;
   padding: 88px 18px 48px;
   background:
-    radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--primary) 36%, transparent), transparent 28%),
-    radial-gradient(circle at 84% 10%, color-mix(in srgb, var(--primary-hover) 18%, transparent), transparent 28%),
-    linear-gradient(180deg, color-mix(in srgb, var(--primary) 24%, transparent), transparent 320px);
+    radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--primary) var(--page-glow-primary-soft), transparent), transparent 28%),
+    radial-gradient(circle at 84% 10%, color-mix(in srgb, var(--primary-hover) var(--page-glow-secondary-soft), transparent), transparent 28%),
+    linear-gradient(180deg, color-mix(in srgb, var(--primary) var(--page-glow-wash-soft), transparent), transparent 320px);
 }
 
 .notes-header {

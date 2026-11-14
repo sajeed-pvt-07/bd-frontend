@@ -16,24 +16,38 @@
   --border: #d0d7de;
 
   --shadow: rgba(0, 0, 0, 0.1);
+
+  --page-glow-primary: 44%;
+  --page-glow-secondary: 22%;
+  --page-glow-wash: 36%;
+  --page-glow-primary-soft: 36%;
+  --page-glow-secondary-soft: 18%;
+  --page-glow-wash-soft: 24%;
 }
 
 .dark-theme {
-  --bg: #1B262C;
-  --surface: #0F4C75;
-  --hover-bg: #1E5F8B;
+  --bg: #16111F;
+  --surface: #261D35;
+  --hover-bg: #352746;
 
-  --text: #BBE1FA;
-  --text-muted: #8daec7;
+  --text: #F4EDFF;
+  --text-muted: #C0B4D3;
 
-  --primary: #A6E3E9;
-  --primary-hover: #8fd7df;
-  --primary-text: #112D4E;
+  --primary: #C4A1FF;
+  --primary-hover: #A779E6;
+  --primary-text: #1B1028;
 
-  --accent: #DBE2EF;
-  --border: #2c4454;
+  --accent: #E6D5FF;
+  --border: #49385D;
 
-  --shadow: rgba(0, 0, 0, 0.4);
+  --shadow: rgba(6, 3, 12, 0.48);
+
+  --page-glow-primary: 12%;
+  --page-glow-secondary: 6%;
+  --page-glow-wash: 10%;
+  --page-glow-primary-soft: 10%;
+  --page-glow-secondary-soft: 5%;
+  --page-glow-wash-soft: 7%;
 }
 
 $font-heading: "Poppins", sans-serif;

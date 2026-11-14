@@ -89,8 +89,10 @@
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 50%;
-  background: #f7edc9;
-  box-shadow: 0 0 28px 5px rgb(247 237 201 / 20%), 0 0 80px 18px rgb(166 227 233 / 9%);
+  background: var(--accent);
+  box-shadow:
+    0 0 24px 4px color-mix(in srgb, var(--accent) 14%, transparent),
+    0 0 60px 12px color-mix(in srgb, var(--primary) 5%, transparent);
   animation: moon-glow 6s ease-in-out infinite alternate;
 }
 
@@ -111,8 +113,8 @@
   width: 3px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: #e6f4ff;
-  box-shadow: 0 0 8px 2px rgb(187 225 250 / 42%);
+  background: var(--accent);
+  box-shadow: 0 0 6px 1px color-mix(in srgb, var(--accent) 24%, transparent);
   animation: star-twinkle 3s ease-in-out infinite alternate;
 }
 
@@ -251,8 +253,8 @@
 }
 
 :host-context(.dark-theme) .cloud {
-  background: rgb(103 143 169 / 24%);
-  filter: drop-shadow(0 8px 14px rgb(8 20 29 / 12%));
+  background: color-mix(in srgb, var(--primary) 16%, transparent);
+  filter: drop-shadow(0 8px 14px rgb(8 4 16 / 18%));
 }
 
 @keyframes cloud-drift {
@@ -275,10 +277,14 @@
 
 @keyframes moon-glow {
   from {
-    box-shadow: 0 0 24px 4px rgb(247 237 201 / 17%), 0 0 70px 14px rgb(166 227 233 / 7%);
+    box-shadow:
+      0 0 20px 3px color-mix(in srgb, var(--accent) 12%, transparent),
+      0 0 56px 10px color-mix(in srgb, var(--primary) 4%, transparent);
   }
   to {
-    box-shadow: 0 0 34px 7px rgb(247 237 201 / 24%), 0 0 90px 20px rgb(166 227 233 / 12%);
+    box-shadow:
+      0 0 28px 5px color-mix(in srgb, var(--accent) 16%, transparent),
+      0 0 72px 16px color-mix(in srgb, var(--primary) 7%, transparent);
   }
 }
 
