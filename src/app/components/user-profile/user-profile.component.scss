@@ -9,6 +9,8 @@
   border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
   border-radius: 8px;
   width: 180px;
+  font: inherit;
+  text-align: center;
   cursor: pointer;
   transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease, border-color 160ms ease;
   background: var(--surface);

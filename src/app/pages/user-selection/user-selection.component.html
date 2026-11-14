@@ -1,5 +1,6 @@
 <div class="user-selection-container">
   <h2 class="selection-title">Who's joining the celebration today?</h2>
+  <p class="selection-hint">Choose a profile to continue to the greeting.</p>
   @if (loading$ | async) {
     <app-loading-indicator label="Loading profiles..."></app-loading-indicator>
   } @else {
@@ -15,8 +16,13 @@
     </div>
   }
 
-  <button class="selected-action proceed-button" *ngIf="selectedUser" (click)="goToTimeline()" title="Proceed to timeline" aria-label="Go to timeline for celebration">
-    <span class="name">{{ selectedUser.name }}</span> is ready to celebrate? Let's go!
+  <button
+    class="selected-action proceed-button"
+    *ngIf="selectedUser"
+    (click)="goToGreeting()"
+    title="Continue to the greeting"
+    aria-label="Continue to the greeting"
+  >
+    Continue to {{ selectedUser.name }}'s greeting →
   </button>
-
 </div>

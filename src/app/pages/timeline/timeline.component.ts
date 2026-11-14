@@ -86,6 +86,13 @@ export class TimelineComponent {
     this.router.navigate(['/thank-you']);
   }
 
+  scrollToEnding(): void {
+    document.getElementById('timeline-ending')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  }
+
   private toTimelineEvent(item: TimelineItem): NgxTimelineEvent {
     return {
       timestamp: new Date(`${item.eventDate}T00:00:00`),

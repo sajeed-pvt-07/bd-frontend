@@ -39,6 +39,46 @@
   }
 }
 
+.timeline-scroll-cue {
+  position: fixed;
+  top: 50%;
+  right: 12px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 9px;
+  border: 1px solid color-mix(in srgb, var(--primary) 36%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: translateY(-50%);
+  animation: scroll-cue-bob 1.8s ease-in-out infinite;
+
+  &:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+@keyframes scroll-cue-bob {
+  50% {
+    transform: translateY(calc(-50% + 3px));
+  }
+}
+
+@keyframes scroll-cue-bob-bottom {
+  50% {
+    transform: translateX(50%) translateY(-3px);
+  }
+}
+
 .state-panel,
 .special-card,
 .timeline-card {
@@ -313,7 +353,19 @@
 @media (max-width: 900px) {
   .timeline-page {
     width: min(100% - 20px, 680px);
-    padding-top: 24px;
+    padding: 24px 0 96px;
+  }
+
+  .timeline-scroll-cue {
+    top: auto;
+    right: 50%;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    flex-direction: row;
+    max-width: calc(100vw - 24px);
+    padding: 10px 14px;
+    writing-mode: horizontal-tb;
+    transform: translateX(50%);
+    animation-name: scroll-cue-bob-bottom;
   }
 
   .timeline-header {

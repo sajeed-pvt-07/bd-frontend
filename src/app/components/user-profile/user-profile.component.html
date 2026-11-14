@@ -1,7 +1,13 @@
-<div class="user-profile-container" (click)="selectUser()" [class.selected]="selected">
-  <div class="checkmark" *ngIf="selected">✓</div>
-  <div class="dp">
+<button
+  type="button"
+  class="user-profile-container"
+  (click)="selectUser()"
+  [class.selected]="selected"
+  [attr.aria-label]="'Continue with ' + user.name"
+>
+  <span class="checkmark" *ngIf="selected" aria-hidden="true">✓</span>
+  <span class="dp">
     <img [src]="user.dp" alt="User DP" class="dp-image">
-  </div>
+  </span>
   <span class="name">{{ user.name }}</span>
-</div>
+</button>

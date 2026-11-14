@@ -79,17 +79,8 @@ export const USER_SELECTION_TOUR_STEPS = [
     element: '.users',
     popover: {
       title: '✨ Pick one',
-      description: 'Click on any profile here to make this experience feel a little more personal.',
+      description: 'Choose a profile. On phones and tablets, tapping continues to the greeting. On wider screens, select a profile and then use the button below.',
       side: 'bottom' as const,
-      align: 'center' as const,
-    },
-  },
-  {
-    element: '.proceed-button',
-    popover: {
-      title: '🚀 Ready?',
-      description: 'Once a profile is selected, use this button to continue to the next part.',
-      side: 'top' as const,
       align: 'center' as const,
     },
   },
@@ -137,6 +128,15 @@ export const TIMELINE_TOUR_STEPS = [
     popover: {
       title: '🌟 These are your moments',
       description: 'Welcome to the timeline! All the memories, photos, and conversations are right here, collected over time just for you.',
+      side: 'bottom' as const,
+      align: 'center' as const,
+    },
+  },
+  {
+    element: '.timeline-scroll-cue',
+    popover: {
+      title: '👇 There is more below',
+      description: 'Scroll through the memories, then use the button at the bottom to continue to the next page.',
       side: 'bottom' as const,
       align: 'center' as const,
     },

@@ -37,15 +37,20 @@ export class UserSelectionComponent {
     this.selectedUser = user;
     this.UserService.setSelectedUser(user);
     this.analyticsService.track('PROFILE_SELECT', { profileName: user.name });
+
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      this.goToGreeting(user);
+    }
   }
 
-
-  goToTimeline() { 
-    if(this.selectedUser){
-      this.router.navigate(['/greeting', this.selectedUser.name], {
-        state: { userId: this.selectedUser.id }
-      });
+  goToGreeting(user = this.selectedUser): void {
+    if (!user) {
+      return;
     }
+
+    this.router.navigate(['/greeting', user.name], {
+      state: { userId: user.id }
+    });
   }
 
 }

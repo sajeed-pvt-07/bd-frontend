@@ -5,6 +5,10 @@
       <p>Little moments, saved in order.</p>
     </div>
   </header>
+  <button type="button" class="timeline-scroll-cue" (click)="scrollToEnding()">
+    <span>Scroll down for the next page</span>
+    <span aria-hidden="true">↓</span>
+  </button>
 
   @if (hasError$ | async) {
     <section class="state-panel">Could not load the timeline right now.</section>
@@ -58,8 +62,8 @@
     }
   }
 
-  <footer class="timeline-ending">
-    <p>One last little note before you go.</p>
+  <footer class="timeline-ending" id="timeline-ending">
+    <p>Ready for the next page?</p>
     <button type="button" class="ending-button" (click)="continueToThankYou()">
       <span>One last thing</span>
       <span aria-hidden="true">→</span>
